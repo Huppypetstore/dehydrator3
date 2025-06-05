@@ -3,6 +3,9 @@ import pandas as pd
 import plotly.express as px
 from language_dict import LANGUAGES, MAIN_CATEGORIES, SUB_CATEGORIES, DEWATERING_MACHINE_TYPES, COLUMN_MAP
 
+# 必须放在所有 Streamlit 命令之前
+st.set_page_config(page_title="📊 Inquiry Data Analysis APP", layout="wide")
+
 def load_and_process_data(uploaded_file, lang) -> pd.DataFrame:
     try:
         df = pd.read_excel(uploaded_file)
@@ -59,7 +62,6 @@ def display_summary_chart(df, group_by, lang, T, color_col=None, sorted_categori
         st.plotly_chart(fig, use_container_width=True)
 
 def map_column_names(df, lang):
-    # 只做显示用，不改变原始数据
     col_map = COLUMN_MAP[lang]
     return df.rename(columns=col_map)
 
@@ -67,7 +69,6 @@ def main():
     # 语言选择
     lang = st.sidebar.selectbox("Language / 言語", options=["ja", "en"], format_func=lambda x: "日本語" if x=="ja" else "English")
     T = LANGUAGES[lang]
-    st.set_page_config(page_title=T["app_title"], layout="wide")
     st.title(T["app_title"])
 
     uploaded_file = st.file_uploader(T["upload_label"], type=['xlsx', 'xls'])
